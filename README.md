@@ -1,10 +1,10 @@
-# Github action to simplify variable mapping by a specific key
+# GitHub Action to simplify variable mapping by a specific key
 
 Sinelg-Variable-Mapper action maps variable by regular expressions.
 
 ## Sample Workflows
 
-### Match multiple values to single using regex pattern
+### Match multiple values to single using regular expression pattern
 
 ```yaml
 on: [push]
@@ -18,6 +18,7 @@ jobs:
         with:
           key: staging-5
           map: |
+            sandbox-\d+: sandbox
             staging-\d+: staging
       - name: Echo environment
         run: echo ${{ steps.mapper.outputs.value }}
