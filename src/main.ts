@@ -14,14 +14,18 @@ export async function run(): Promise<void> {
     const default_value: string = core.getInput('default')
 
     // Validate the input
-    const mode_pattern = /^(strict|fallback-to-original|fallback-to-default)$/;
+    const mode_pattern = /^(strict|fallback-to-original|fallback-to-default)$/
     if (!mode_pattern.test(mode)) {
-      throw new Error(`Invalid mode: "${mode}". It must be one of: strict, fallback-to-original, fallback-to-default`);
+      throw new Error(
+        `Invalid mode: "${mode}". It must be one of: strict, fallback-to-original, fallback-to-default`
+      )
     }
 
-    const export_to_pattern = /^((env|log|output),?)+$/;
+    const export_to_pattern = /^((env|log|output),?)+$/
     if (!export_to_pattern.test(export_to)) {
-      throw new Error(`Invalid export_to: "${export_to}". Possible options, divided by comma: output,env,log`);
+      throw new Error(
+        `Invalid export_to: "${export_to}". Possible options, divided by comma: output,env,log`
+      )
     }
 
     // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
@@ -29,15 +33,15 @@ export async function run(): Promise<void> {
 
     var result: string | undefined
 
-    const lines = map.trim().split(/\r?\n/);
+    const lines = map.trim().split(/\r?\n/)
 
     for (const line of lines) {
       core.debug(`Line: ${line}`)
-      const pair = line.split(separator); // Destructure key and value
+      const pair = line.split(separator) // Destructure key and value
       if (pair.length != 2) {
-        throw new Error(`Key/value pair not found: ${line}`);
+        throw new Error(`Key/value pair not found: ${line}`)
       }
-      const regex = new RegExp(`^${pair[0]}$`);
+      const regex = new RegExp(`^${pair[0]}$`)
       core.debug(`RegExp: ${regex}`)
       if (regex.test(key)) {
         result = pair[1]
@@ -54,7 +58,7 @@ export async function run(): Promise<void> {
           result = default_value
           break
         default:
-          throw new Error('No suitable mapping found');
+          throw new Error('No suitable mapping found')
       }
     }
 

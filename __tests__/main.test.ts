@@ -37,12 +37,12 @@ describe('action', () => {
 
   it('strict string on 1st line', async () => {
     // Set the action's inputs as return values from core.getInput()
-    const input: { [name: string]: string }  = {
+    const input: { [name: string]: string } = {
       key: 'k1',
       map: 'k1:v1',
       separator: ':',
       export_to: 'output',
-      mode: 'strict',
+      mode: 'strict'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -62,12 +62,12 @@ describe('action', () => {
 
   it('strict string on 2nd line', async () => {
     // Set the action's inputs as return values from core.getInput()
-    const input: { [name: string]: string }  = {
+    const input: { [name: string]: string } = {
       key: 'k2',
-      map: "k1:v1\nk2:v2",
+      map: 'k1:v1\nk2:v2',
       separator: ':',
       export_to: 'output',
-      mode: 'strict',
+      mode: 'strict'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -87,12 +87,12 @@ describe('action', () => {
 
   it('regex string', async () => {
     // Set the action's inputs as return values from core.getInput()
-    const input: { [name: string]: string }  = {
+    const input: { [name: string]: string } = {
       key: 'staging-23',
       map: 'staging-\\d+:staging',
       separator: ':',
       export_to: 'output',
-      mode: 'strict',
+      mode: 'strict'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -112,12 +112,12 @@ describe('action', () => {
 
   it('mode fallback-to-original', async () => {
     // Set the action's inputs as return values from core.getInput()
-    const input: { [name: string]: string }  = {
+    const input: { [name: string]: string } = {
       key: 'sandbox-25',
-      map: "staging-\d+:staging",
+      map: 'staging-d+:staging',
       separator: ':',
       export_to: 'output',
-      mode: 'fallback-to-original',
+      mode: 'fallback-to-original'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -137,13 +137,13 @@ describe('action', () => {
 
   it('mode fallback-to-default', async () => {
     // Set the action's inputs as return values from core.getInput()
-    const input: { [name: string]: string }  = {
+    const input: { [name: string]: string } = {
       key: 'sandbox-25',
-      map: "staging-\d+:staging",
+      map: 'staging-d+:staging',
       separator: ':',
       export_to: 'output',
       mode: 'fallback-to-default',
-      default: 'default-value',
+      default: 'default-value'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -163,13 +163,13 @@ describe('action', () => {
 
   it('outputs and separator', async () => {
     // Set the action's inputs as return values from core.getInput()
-    const input: { [name: string]: string }  = {
+    const input: { [name: string]: string } = {
       key: 'k1',
       map: 'k1|v1',
       separator: '|',
       export_to: 'output,env',
       mode: 'strict',
-      default: '',
+      default: ''
     }
     getInputMock.mockImplementation(name => input[name])
 
