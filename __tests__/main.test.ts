@@ -183,7 +183,10 @@ describe('correct input values, edge cases', () => {
     expect(exportVariableMock).not.toHaveBeenCalled()
     expect(setOutputMock).not.toHaveBeenCalled()
 
-    expect(setFailedMock).toHaveBeenNthCalledWith(1, 'No suitable mapping found')
+    expect(setFailedMock).toHaveBeenNthCalledWith(
+      1,
+      'No suitable mapping found'
+    )
   })
 })
 
