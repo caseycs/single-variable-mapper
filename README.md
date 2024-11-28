@@ -53,7 +53,7 @@ Also showcasing different output options
   with:
     key: 'staging-25'
     map: |
-      staging-\d+| staging
+      staging-\d+|staging
     separator: '|'
 - name: Echo environment
   run: |
