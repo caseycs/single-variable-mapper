@@ -1,10 +1,10 @@
-# GitHub Action to simplify variable mapping by a specific key
+# GitHub Action to simplify variable remapping
 
-Sinelg-Variable-Mapper action maps variable by regular expressions.
+Single-Variable-Mapper action maps variable by regular expressions.
 
 ## Sample Workflows
 
-### Match multiple values to single using regular expression pattern
+### Map using regular expression
 
 ```yaml
 on: [push]
@@ -25,24 +25,21 @@ jobs:
         # staging
 ```
 
-### Remap value
+### Remap string value
 
 Also showcasing different output options
 
 ```yaml
 - uses: caseycs/single-variable-mapper@master
-  id: mapper
   with:
     key: sandbox
     map: |
       sandbox: preprod
-    export_to: output, env
+    export_to: env
     export_to_env_name: mapper_value
 - name: Echo environment
   run: |
-    echo ${{ steps.mapper.outputs.value }}
     echo ${{ env.mapper_value }}
-  # preprod
   # preprod
 ```
 
