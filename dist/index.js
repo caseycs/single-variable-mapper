@@ -25680,7 +25680,16 @@ function run() {
         const export_to = core.getInput('export_to');
         const export_to_env_name = core.getInput('export_to_env_name');
         const default_value = core.getInput('default');
-        // Validate the input
+        // Validate input
+        if (key === '') {
+            throw new Error(`Key is empty`);
+        }
+        if (map === '') {
+            throw new Error(`Map is empty`);
+        }
+        if (separator === '') {
+            throw new Error(`Separator is empty`);
+        }
         const mode_pattern = /^(strict|fallback-to-original|fallback-to-default)$/;
         if (!mode_pattern.test(mode)) {
             throw new Error(`Invalid mode: "${mode}". It must be one of: strict, fallback-to-original, fallback-to-default`);
@@ -25689,18 +25698,18 @@ function run() {
         if (!export_to_pattern.test(export_to)) {
             throw new Error(`Invalid export_to: "${export_to}". Possible options, divided by comma: output,env,log`);
         }
-        if (export_to.includes('env') && export_to_env_name.trim() == '') {
+        if (export_to.includes('env') && export_to_env_name == '') {
             throw new Error(`Empty export_to_env_name: when export_to contains log value is required`);
         }
         // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
         // core.debug(`Waiting ${ms} milliseconds ...`)
         let result;
-        const lines = map.trim().split(/\r?\n/);
+        const lines = map.split(/\r?\n/);
         for (const line of lines) {
             core.debug(`Line: ${line}`);
             const pair = line.split(separator); // Destructure key and value
             if (pair.length != 2) {
-                throw new Error(`Key/value pair not found: ${line}`);
+                throw new Error(`Pattern and value pair missing, incorrect map or separator: ${line}, separator ${separator}`);
             }
             const regex = new RegExp(`^${pair[0]}$`);
             core.debug(`RegExp: ${regex}`);

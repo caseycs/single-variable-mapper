@@ -62,7 +62,7 @@ Also showcasing different output options
   # staging
 ```
 
-### Modes
+## Modes
 
 - `fallback-to-default` - use default value when no match was found
 - `fallback-to-original` - use original key when no match was found

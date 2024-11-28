@@ -19,7 +19,7 @@ let setFailedMock: jest.SpiedFunction<typeof core.setFailed>
 let setOutputMock: jest.SpiedFunction<typeof core.setOutput>
 let exportVariableMock: jest.SpiedFunction<typeof core.exportVariable>
 
-describe('action', () => {
+describe('correct input values, successful cases', () => {
   beforeEach(() => {
     jest.clearAllMocks()
 
@@ -31,7 +31,6 @@ describe('action', () => {
   })
 
   it('strict string on 1st line', () => {
-    // Set the action's inputs as return values from core.getInput()
     const input: { [name: string]: string } = {
       key: 'k1',
       map: 'k1:v1',
@@ -48,15 +47,10 @@ describe('action', () => {
     expect(setFailedMock).not.toHaveBeenCalled()
     expect(exportVariableMock).not.toHaveBeenCalled()
 
-    expect(setOutputMock).toHaveBeenNthCalledWith(
-      1,
-      'value',
-      expect.stringMatching('v1')
-    )
+    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'v1')
   })
 
   it('strict string on 2nd line', () => {
-    // Set the action's inputs as return values from core.getInput()
     const input: { [name: string]: string } = {
       key: 'k2',
       map: 'k1:v1\nk2:v2',
@@ -73,15 +67,10 @@ describe('action', () => {
     expect(setFailedMock).not.toHaveBeenCalled()
     expect(exportVariableMock).not.toHaveBeenCalled()
 
-    expect(setOutputMock).toHaveBeenNthCalledWith(
-      1,
-      'value',
-      expect.stringMatching('v2')
-    )
+    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'v2')
   })
 
   it('regex string', () => {
-    // Set the action's inputs as return values from core.getInput()
     const input: { [name: string]: string } = {
       key: 'staging-23',
       map: 'staging-\\d+:staging',
@@ -98,15 +87,10 @@ describe('action', () => {
     expect(setFailedMock).not.toHaveBeenCalled()
     expect(exportVariableMock).not.toHaveBeenCalled()
 
-    expect(setOutputMock).toHaveBeenNthCalledWith(
-      1,
-      'value',
-      expect.stringMatching('staging')
-    )
+    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'staging')
   })
 
   it('mode fallback-to-original', () => {
-    // Set the action's inputs as return values from core.getInput()
     const input: { [name: string]: string } = {
       key: 'sandbox-25',
       map: 'staging-d+:staging',
@@ -123,15 +107,10 @@ describe('action', () => {
     expect(setFailedMock).not.toHaveBeenCalled()
     expect(exportVariableMock).not.toHaveBeenCalled()
 
-    expect(setOutputMock).toHaveBeenNthCalledWith(
-      1,
-      'value',
-      expect.stringMatching('sandbox-25')
-    )
+    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'sandbox-25')
   })
 
   it('mode fallback-to-default', () => {
-    // Set the action's inputs as return values from core.getInput()
     const input: { [name: string]: string } = {
       key: 'sandbox-25',
       map: 'staging-d+:staging',
@@ -149,15 +128,10 @@ describe('action', () => {
     expect(setFailedMock).not.toHaveBeenCalled()
     expect(exportVariableMock).not.toHaveBeenCalled()
 
-    expect(setOutputMock).toHaveBeenNthCalledWith(
-      1,
-      'value',
-      expect.stringMatching('default-value')
-    )
+    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'default-value')
   })
 
   it('outputs and separator', () => {
-    // Set the action's inputs as return values from core.getInput()
     const input: { [name: string]: string } = {
       key: 'k1',
       map: 'k1|v1',
@@ -176,15 +150,185 @@ describe('action', () => {
     expect(setFailedMock).not.toHaveBeenCalled()
     expect(errorMock).not.toHaveBeenCalled()
 
-    expect(setOutputMock).toHaveBeenNthCalledWith(
+    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'v1')
+    expect(exportVariableMock).toHaveBeenNthCalledWith(1, 'test', 'v1')
+  })
+})
+
+describe('input validation', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+
+    errorMock = jest.spyOn(core, 'error').mockImplementation()
+    getInputMock = jest.spyOn(core, 'getInput').mockImplementation()
+    setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation()
+    setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation()
+    exportVariableMock = jest.spyOn(core, 'exportVariable').mockImplementation()
+  })
+
+  it('empty key', () => {
+    const input: { [name: string]: string } = {
+      key: '',
+      map: 'k1:v1'
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(setOutputMock).not.toHaveBeenCalled()
+
+    expect(setFailedMock).toHaveBeenNthCalledWith(1, 'Key is empty')
+  })
+
+  it('empty map', () => {
+    const input: { [name: string]: string } = {
+      key: 'k1',
+      map: ''
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(setOutputMock).not.toHaveBeenCalled()
+
+    expect(setFailedMock).toHaveBeenNthCalledWith(1, 'Map is empty')
+  })
+
+  it('empty separator', () => {
+    const input: { [name: string]: string } = {
+      key: 'k1',
+      map: 'k1:v1',
+      separator: ''
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(setOutputMock).not.toHaveBeenCalled()
+
+    expect(setFailedMock).toHaveBeenNthCalledWith(1, 'Separator is empty')
+  })
+
+  it('incorrect export_to - empty', () => {
+    const input: { [name: string]: string } = {
+      key: 'k1',
+      map: 'k1:v1',
+      separator: ':',
+      export_to: ''
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(setOutputMock).not.toHaveBeenCalled()
+
+    expect(setFailedMock).toHaveBeenNthCalledWith(
       1,
-      'value',
-      expect.stringMatching('v1')
+      expect.stringMatching('Invalid mode')
     )
-    expect(exportVariableMock).toHaveBeenNthCalledWith(
+  })
+
+  it('incorrect export_to - invalid', () => {
+    const input: { [name: string]: string } = {
+      key: 'k1',
+      map: 'k1:v1',
+      separator: ':',
+      export_to: 'env,invalid'
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(setOutputMock).not.toHaveBeenCalled()
+
+    expect(setFailedMock).toHaveBeenNthCalledWith(
       1,
-      'test',
-      expect.stringMatching('v1')
+      expect.stringMatching('Invalid mode')
+    )
+  })
+
+  it('missing export_to_env_name', () => {
+    const input: { [name: string]: string } = {
+      key: 'k1',
+      map: 'k1:v1',
+      separator: ':',
+      mode: 'strict',
+      export_to: 'env',
+      export_to_env_name: ''
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(setOutputMock).not.toHaveBeenCalled()
+
+    expect(setFailedMock).toHaveBeenNthCalledWith(
+      1,
+      expect.stringMatching('Empty export_to_env_name')
+    )
+  })
+
+  it('incorrect separator or map line - one piece', () => {
+    const input: { [name: string]: string } = {
+      key: 'k1',
+      map: 'k1:v1',
+      separator: '|',
+      mode: 'strict',
+      export_to: 'output'
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(setOutputMock).not.toHaveBeenCalled()
+
+    expect(setFailedMock).toHaveBeenNthCalledWith(
+      1,
+      expect.stringMatching('Pattern and value pair missing')
+    )
+  })
+
+  it('incorrect separator or map line - 3 pieces', () => {
+    const input: { [name: string]: string } = {
+      key: 'k1',
+      map: 'k1:v1:v2',
+      separator: ':',
+      mode: 'strict',
+      export_to: 'output'
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(setOutputMock).not.toHaveBeenCalled()
+
+    expect(setFailedMock).toHaveBeenNthCalledWith(
+      1,
+      expect.stringMatching('Pattern and value pair missing')
     )
   })
 })
