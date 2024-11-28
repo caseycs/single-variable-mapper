@@ -25657,52 +25657,74 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = run;
 const core = __importStar(__nccwpck_require__(7484));
-const wait_1 = __nccwpck_require__(910);
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
  */
-async function run() {
+function run() {
     try {
-        const ms = core.getInput('milliseconds');
+        const key = core.getInput('key');
+        const map = core.getInput('map');
+        const separator = core.getInput('separator');
+        const mode = core.getInput('mode');
+        const export_to = core.getInput('export_to');
+        const default_value = core.getInput('default');
+        // Validate the input
+        const mode_pattern = /^(strict|fallback-to-original|fallback-to-default)$/;
+        if (!mode_pattern.test(mode)) {
+            throw new Error(`Invalid mode: "${mode}". It must be one of: strict, fallback-to-original, fallback-to-default`);
+        }
+        const export_to_pattern = /^((env|log|output),?)+$/;
+        if (!export_to_pattern.test(export_to)) {
+            throw new Error(`Invalid export_to: "${export_to}". Possible options, divided by comma: output,env,log`);
+        }
         // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
-        core.debug(`Waiting ${ms} milliseconds ...`);
-        // Log the current timestamp, wait, then log the new timestamp
-        core.debug(new Date().toTimeString());
-        await (0, wait_1.wait)(parseInt(ms, 10));
-        core.debug(new Date().toTimeString());
+        // core.debug(`Waiting ${ms} milliseconds ...`)
+        let result;
+        const lines = map.trim().split(/\r?\n/);
+        for (const line of lines) {
+            core.debug(`Line: ${line}`);
+            const pair = line.split(separator); // Destructure key and value
+            if (pair.length != 2) {
+                throw new Error(`Key/value pair not found: ${line}`);
+            }
+            const regex = new RegExp(`^${pair[0]}$`);
+            core.debug(`RegExp: ${regex}`);
+            if (regex.test(key)) {
+                result = pair[1];
+            }
+        }
+        if (result === undefined) {
+            console.log(`Mapping not found, mode: ${mode}`);
+            switch (mode) {
+                case 'fallback-to-original':
+                    result = key;
+                    break;
+                case 'fallback-to-default':
+                    result = default_value;
+                    break;
+                default:
+                    throw new Error('No suitable mapping found');
+            }
+        }
+        // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
+        core.debug(`Mapped value: ${result}`);
         // Set outputs for other workflow steps to use
-        core.setOutput('time', new Date().toTimeString());
+        if (export_to.includes('output')) {
+            core.setOutput('value', result);
+        }
+        if (export_to.includes('env')) {
+            core.exportVariable('value', result);
+        }
+        if (export_to.includes('log')) {
+            core.info(`Mapped value: ${result}`);
+        }
     }
     catch (error) {
         // Fail the workflow run if an error occurs
         if (error instanceof Error)
             core.setFailed(error.message);
     }
-}
-
-
-/***/ }),
-
-/***/ 910:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.wait = wait;
-/**
- * Wait for a number of milliseconds.
- * @param milliseconds The number of milliseconds to wait.
- * @returns {Promise<string>} Resolves with 'done!' after the wait is over.
- */
-async function wait(milliseconds) {
-    return new Promise(resolve => {
-        if (isNaN(milliseconds)) {
-            throw new Error('milliseconds not a number');
-        }
-        setTimeout(() => resolve('done!'), milliseconds);
-    });
 }
 
 
