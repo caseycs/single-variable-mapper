@@ -11,6 +11,7 @@ export function run(): void {
     const separator: string = core.getInput('separator')
     const mode: string = core.getInput('mode')
     const export_to: string = core.getInput('export_to')
+    const export_to_env_name: string = core.getInput('export_to_env_name')
     const default_value: string = core.getInput('default')
 
     // Validate the input
@@ -25,6 +26,12 @@ export function run(): void {
     if (!export_to_pattern.test(export_to)) {
       throw new Error(
         `Invalid export_to: "${export_to}". Possible options, divided by comma: output,env,log`
+      )
+    }
+
+    if (export_to.includes('env') && export_to_env_name.trim() == '') {
+      throw new Error(
+        `Empty export_to_env_name: when export_to contains log value is required`
       )
     }
 
@@ -70,7 +77,7 @@ export function run(): void {
       core.setOutput('value', result)
     }
     if (export_to.includes('env')) {
-      core.exportVariable('value', result)
+      core.exportVariable(export_to_env_name, result)
     }
     if (export_to.includes('log')) {
       core.info(`Mapped value: ${result}`)

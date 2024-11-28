@@ -163,6 +163,7 @@ describe('action', () => {
       map: 'k1|v1',
       separator: '|',
       export_to: 'output,env',
+      export_to_env_name: 'test',
       mode: 'strict',
       default: ''
     }
@@ -182,7 +183,7 @@ describe('action', () => {
     )
     expect(exportVariableMock).toHaveBeenNthCalledWith(
       1,
-      'value',
+      'test',
       expect.stringMatching('v1')
     )
   })

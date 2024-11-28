@@ -25668,6 +25668,7 @@ function run() {
         const separator = core.getInput('separator');
         const mode = core.getInput('mode');
         const export_to = core.getInput('export_to');
+        const export_to_env_name = core.getInput('export_to_env_name');
         const default_value = core.getInput('default');
         // Validate the input
         const mode_pattern = /^(strict|fallback-to-original|fallback-to-default)$/;
@@ -25677,6 +25678,9 @@ function run() {
         const export_to_pattern = /^((env|log|output),?)+$/;
         if (!export_to_pattern.test(export_to)) {
             throw new Error(`Invalid export_to: "${export_to}". Possible options, divided by comma: output,env,log`);
+        }
+        if (export_to.includes('env') && export_to_env_name.trim() == '') {
+            throw new Error(`Empty export_to_env_name: when export_to contains log value is required`);
         }
         // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
         // core.debug(`Waiting ${ms} milliseconds ...`)
@@ -25714,7 +25718,7 @@ function run() {
             core.setOutput('value', result);
         }
         if (export_to.includes('env')) {
-            core.exportVariable('value', result);
+            core.exportVariable(export_to_env_name, result);
         }
         if (export_to.includes('log')) {
             core.info(`Mapped value: ${result}`);
