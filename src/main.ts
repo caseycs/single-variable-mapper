@@ -4,7 +4,7 @@ import * as core from '@actions/core'
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
  */
-export async function run(): Promise<void> {
+export function run(): void {
   try {
     const key: string = core.getInput('key')
     const map: string = core.getInput('map')
@@ -31,7 +31,7 @@ export async function run(): Promise<void> {
     // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
     // core.debug(`Waiting ${ms} milliseconds ...`)
 
-    var result: string | undefined
+    let result: string | undefined
 
     const lines = map.trim().split(/\r?\n/)
 
