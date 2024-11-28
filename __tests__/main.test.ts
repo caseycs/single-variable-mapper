@@ -30,7 +30,7 @@ describe('action', () => {
     exportVariableMock = jest.spyOn(core, 'exportVariable').mockImplementation()
   })
 
-  it('strict string on 1st line', async () => {
+  it('strict string on 1st line', () => {
     // Set the action's inputs as return values from core.getInput()
     const input: { [name: string]: string } = {
       key: 'k1',
@@ -41,7 +41,7 @@ describe('action', () => {
     }
     getInputMock.mockImplementation(name => input[name])
 
-    await main.run()
+    main.run()
     expect(runMock).toHaveReturned()
 
     expect(errorMock).not.toHaveBeenCalled()
