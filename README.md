@@ -33,7 +33,7 @@ Also showcasing different output options
 - uses: caseycs/single-variable-mapper@master
   id: mapper
   with:
-    key: 'sandbox'
+    key: sandbox
     map: |
       sandbox: preprod
     export_to: output, env
@@ -52,7 +52,7 @@ Also showcasing different output options
 - uses: caseycs/single-variable-mapper@master
   id: mapper
   with:
-    key: 'staging-25'
+    key: staging-25
     map: |
       staging-\d+|staging
     separator: '|'
@@ -72,7 +72,7 @@ Also showcasing different output options
 - uses: caseycs/single-variable-mapper@master
   id: mapper
   with:
-    key: 'staging'
+    key: staging
     map: |
       sandbox: preprod
     mode: fallback-to-original
@@ -86,7 +86,7 @@ Also showcasing different output options
 - uses: caseycs/single-variable-mapper@master
   id: mapper
   with:
-    key: 'staging'
+    key: staging
     map: |
       sandbox: preprod
     mode: fallback-to-default
