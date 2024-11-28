@@ -1,7 +1,3 @@
 module.exports = {
-    ignorePatterns: ["lib/",
-        "dist/",
-        "node_modules/",
-        "coverage/",
-    ]
-};
+  ignorePatterns: ['lib/', 'dist/', 'node_modules/', 'coverage/']
+}
