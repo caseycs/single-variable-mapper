@@ -55,7 +55,7 @@ describe('action', () => {
     )
   })
 
-  it('strict string on 2nd line', async () => {
+  it('strict string on 2nd line', () => {
     // Set the action's inputs as return values from core.getInput()
     const input: { [name: string]: string } = {
       key: 'k2',
@@ -66,7 +66,7 @@ describe('action', () => {
     }
     getInputMock.mockImplementation(name => input[name])
 
-    await main.run()
+    main.run()
     expect(runMock).toHaveReturned()
 
     expect(errorMock).not.toHaveBeenCalled()
@@ -80,7 +80,7 @@ describe('action', () => {
     )
   })
 
-  it('regex string', async () => {
+  it('regex string', () => {
     // Set the action's inputs as return values from core.getInput()
     const input: { [name: string]: string } = {
       key: 'staging-23',
@@ -91,7 +91,7 @@ describe('action', () => {
     }
     getInputMock.mockImplementation(name => input[name])
 
-    await main.run()
+    main.run()
     expect(runMock).toHaveReturned()
 
     expect(errorMock).not.toHaveBeenCalled()
@@ -105,7 +105,7 @@ describe('action', () => {
     )
   })
 
-  it('mode fallback-to-original', async () => {
+  it('mode fallback-to-original', () => {
     // Set the action's inputs as return values from core.getInput()
     const input: { [name: string]: string } = {
       key: 'sandbox-25',
@@ -116,7 +116,7 @@ describe('action', () => {
     }
     getInputMock.mockImplementation(name => input[name])
 
-    await main.run()
+    main.run()
     expect(runMock).toHaveReturned()
 
     expect(errorMock).not.toHaveBeenCalled()
@@ -130,7 +130,7 @@ describe('action', () => {
     )
   })
 
-  it('mode fallback-to-default', async () => {
+  it('mode fallback-to-default', () => {
     // Set the action's inputs as return values from core.getInput()
     const input: { [name: string]: string } = {
       key: 'sandbox-25',
@@ -142,7 +142,7 @@ describe('action', () => {
     }
     getInputMock.mockImplementation(name => input[name])
 
-    await main.run()
+    main.run()
     expect(runMock).toHaveReturned()
 
     expect(errorMock).not.toHaveBeenCalled()
@@ -156,7 +156,7 @@ describe('action', () => {
     )
   })
 
-  it('outputs and separator', async () => {
+  it('outputs and separator', () => {
     // Set the action's inputs as return values from core.getInput()
     const input: { [name: string]: string } = {
       key: 'k1',
@@ -169,7 +169,7 @@ describe('action', () => {
     }
     getInputMock.mockImplementation(name => input[name])
 
-    await main.run()
+    main.run()
     expect(runMock).toHaveReturned()
 
     expect(errorMock).not.toHaveBeenCalled()
