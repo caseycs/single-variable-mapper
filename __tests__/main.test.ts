@@ -21,6 +21,7 @@ let errorMock: jest.SpiedFunction<typeof core.error>
 let getInputMock: jest.SpiedFunction<typeof core.getInput>
 let setFailedMock: jest.SpiedFunction<typeof core.setFailed>
 let setOutputMock: jest.SpiedFunction<typeof core.setOutput>
+let exportVariableMock: jest.SpiedFunction<typeof core.exportVariable>
 
 describe('action', () => {
   beforeEach(() => {
@@ -31,59 +32,163 @@ describe('action', () => {
     getInputMock = jest.spyOn(core, 'getInput').mockImplementation()
     setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation()
     setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation()
+    exportVariableMock = jest.spyOn(core, 'exportVariable').mockImplementation()
   })
 
-  it('sets the time output', async () => {
+  it('strict string on 1st line', async () => {
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
-      switch (name) {
-        case 'milliseconds':
-          return '500'
-        default:
-          return ''
-      }
-    })
+    const input: { [name: string]: string }  = {
+      key: 'k1',
+      map: 'k1:v1',
+      separator: ':',
+      export_to: 'output',
+      mode: 'strict',
+    }
+    getInputMock.mockImplementation(name => input[name])
 
     await main.run()
     expect(runMock).toHaveReturned()
 
-    // Verify that all of the core library functions were called correctly
-    expect(debugMock).toHaveBeenNthCalledWith(1, 'Waiting 500 milliseconds ...')
-    expect(debugMock).toHaveBeenNthCalledWith(
-      2,
-      expect.stringMatching(timeRegex)
-    )
-    expect(debugMock).toHaveBeenNthCalledWith(
-      3,
-      expect.stringMatching(timeRegex)
-    )
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(setFailedMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+
     expect(setOutputMock).toHaveBeenNthCalledWith(
       1,
-      'time',
-      expect.stringMatching(timeRegex)
+      'value',
+      expect.stringMatching('v1')
     )
-    expect(errorMock).not.toHaveBeenCalled()
   })
 
-  it('sets a failed status', async () => {
+  it('strict string on 2nd line', async () => {
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
-      switch (name) {
-        case 'milliseconds':
-          return 'this is not a number'
-        default:
-          return ''
-      }
-    })
+    const input: { [name: string]: string }  = {
+      key: 'k2',
+      map: "k1:v1\nk2:v2",
+      separator: ':',
+      export_to: 'output',
+      mode: 'strict',
+    }
+    getInputMock.mockImplementation(name => input[name])
 
     await main.run()
     expect(runMock).toHaveReturned()
 
-    // Verify that all of the core library functions were called correctly
-    expect(setFailedMock).toHaveBeenNthCalledWith(
-      1,
-      'milliseconds not a number'
-    )
     expect(errorMock).not.toHaveBeenCalled()
+    expect(setFailedMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+
+    expect(setOutputMock).toHaveBeenNthCalledWith(
+      1,
+      'value',
+      expect.stringMatching('v2')
+    )
+  })
+
+  it('regex string', async () => {
+    // Set the action's inputs as return values from core.getInput()
+    const input: { [name: string]: string }  = {
+      key: 'staging-23',
+      map: 'staging-\\d+:staging',
+      separator: ':',
+      export_to: 'output',
+      mode: 'strict',
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    await main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(setFailedMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+
+    expect(setOutputMock).toHaveBeenNthCalledWith(
+      1,
+      'value',
+      expect.stringMatching('staging')
+    )
+  })
+
+  it('mode fallback-to-original', async () => {
+    // Set the action's inputs as return values from core.getInput()
+    const input: { [name: string]: string }  = {
+      key: 'sandbox-25',
+      map: "staging-\d+:staging",
+      separator: ':',
+      export_to: 'output',
+      mode: 'fallback-to-original',
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    await main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(setFailedMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+
+    expect(setOutputMock).toHaveBeenNthCalledWith(
+      1,
+      'value',
+      expect.stringMatching('sandbox-25')
+    )
+  })
+
+  it('mode fallback-to-default', async () => {
+    // Set the action's inputs as return values from core.getInput()
+    const input: { [name: string]: string }  = {
+      key: 'sandbox-25',
+      map: "staging-\d+:staging",
+      separator: ':',
+      export_to: 'output',
+      mode: 'fallback-to-default',
+      default: 'default-value',
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    await main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(setFailedMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+
+    expect(setOutputMock).toHaveBeenNthCalledWith(
+      1,
+      'value',
+      expect.stringMatching('default-value')
+    )
+  })
+
+  it('outputs and separator', async () => {
+    // Set the action's inputs as return values from core.getInput()
+    const input: { [name: string]: string }  = {
+      key: 'k1',
+      map: 'k1|v1',
+      separator: '|',
+      export_to: 'output,env',
+      mode: 'strict',
+      default: '',
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    await main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(setFailedMock).not.toHaveBeenCalled()
+    expect(errorMock).not.toHaveBeenCalled()
+
+    expect(setOutputMock).toHaveBeenNthCalledWith(
+      1,
+      'value',
+      expect.stringMatching('v1')
+    )
+    expect(exportVariableMock).toHaveBeenNthCalledWith(
+      1,
+      'value',
+      expect.stringMatching('v1')
+    )
   })
 })

@@ -1,23 +1,40 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'single-variable-mapper'
+description: 'Github action to simplify variable mapping by a specific key'
+author: 'caseycs'
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
-  icon: 'heart'
-  color: 'red'
+  color: green
+  icon: arrow-right
 
 # Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
+  key:
+    description: 'Key to match the map argument'
     required: true
-    default: '1000'
+  map:
+    description: 'Pairs of regular expressions and resulting values, divided by separator'
+    required: true
+  export_to:
+    description: 'Comma-separated list of targets to export variables to. log, env and output are valid values.'
+    default: 'output,log'
+  export_to_env_name:
+    description: 'Environment variable name when export_to contains env'
+    default: ''
+  separator:
+    description: 'Separator between regular expression and result value'
+    default: ':'
+  mode:
+    description: 'Specify the behavior of getting the variable. Possible options: strict, fallback-to-original, fallback-to-default'
+    default: 'strict'
+  default:
+    description: 'Default value, used when mode is fallback-to-default and not match was found'
+    default: ''
 
 # Define your outputs here.
 outputs:
-  time:
-    description: 'Your output description here'
+  value:
+    description: 'Mapped value'
 
 runs:
   using: node20
