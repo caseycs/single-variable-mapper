@@ -155,6 +155,38 @@ describe('correct input values, successful cases', () => {
   })
 })
 
+describe('correct input values, edge cases', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+
+    errorMock = jest.spyOn(core, 'error').mockImplementation()
+    getInputMock = jest.spyOn(core, 'getInput').mockImplementation()
+    setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation()
+    setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation()
+    exportVariableMock = jest.spyOn(core, 'exportVariable').mockImplementation()
+  })
+
+  it('strict mode, key not found', () => {
+    const input: { [name: string]: string } = {
+      key: 'k1',
+      map: 'k2:v2',
+      separator: ':',
+      export_to: 'output',
+      mode: 'strict'
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(setOutputMock).not.toHaveBeenCalled()
+
+    expect(setFailedMock).toHaveBeenNthCalledWith(1, 'No suitable mapping found')
+  })
+})
+
 describe('input validation', () => {
   beforeEach(() => {
     jest.clearAllMocks()
