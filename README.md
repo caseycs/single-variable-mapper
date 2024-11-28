@@ -20,7 +20,7 @@ jobs:
           map: |
             sandbox-\d+: sandbox
             staging-\d+: staging
-      - name: Echo environment
+      - name: Print mapped value
         run: echo ${{ steps.mapper.outputs.value }}
         # staging
 ```
@@ -37,7 +37,7 @@ Also showcasing different output options
       sandbox: preprod
     export_to: env
     export_to_env_name: mapper_value
-- name: Echo environment
+- name: Print mapped value
   run: |
     echo ${{ env.mapper_value }}
   # preprod
@@ -53,7 +53,7 @@ Also showcasing different output options
     map: |
       staging-\d+|staging
     separator: '|'
-- name: Echo environment
+- name: Print mapped value
   run: |
     echo ${{ steps.mapper.outputs.value }}
   # staging
@@ -73,7 +73,7 @@ Also showcasing different output options
     map: |
       sandbox: preprod
     mode: fallback-to-original
-- name: Echo environment
+- name: Print mapped value
   run: |
     echo ${{ steps.mapper.outputs.value }}
   # staging
@@ -88,7 +88,7 @@ Also showcasing different output options
       sandbox: preprod
     mode: fallback-to-default
     default: playground
-- name: Echo environment
+- name: Print mapped value
   run: |
     echo ${{ steps.mapper.outputs.value }}
   # playground
