@@ -54,7 +54,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Test Local Action 1
-        id: test-action
+        id: test-action-1
         uses: ./
         with:
           key: staging-5
@@ -63,10 +63,10 @@ jobs:
 
       - name: Test Local Action 1 - print output
         id: output
-        run: set -e; [ "${{ steps.test-action.outputs.value }}" == "staging" ]
+        run: set -e; [ "${{ steps.test-action-1.outputs.value }}" == "staging" ]
 
       - name: Test Local Action 2
-        id: test-action
+        id: test-action-2
         uses: ./
         with:
           key: staging-5
@@ -75,4 +75,4 @@ jobs:
 
       - name: Test Local Action 2 - print output
         id: output
-        run: set -e; [ "${{ steps.test-action.outputs.value }}" == "staging-5" ]
+        run: set -e; [ "${{ steps.test-action-2.outputs.value }}" == "staging-5" ]
