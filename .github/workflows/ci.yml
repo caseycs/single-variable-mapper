@@ -71,8 +71,7 @@ jobs:
           key: staging-5
           allow_empty_map: true
           mode: fallback-to-original
-          map: ''
+          map: ""
 
       - name: Test Local Action 2 - print output
-        run:
-          set -e; [ "${{ steps.test-action-2.outputs.value }}" == "staging-5" ]
+        run: set -e; [ "${{ steps.test-action-2.outputs.value }}" == "staging-5" ]
