@@ -18,9 +18,9 @@ inputs:
     required: true
   export_to:
     description:
-      'Comma-separated list of targets to export variables to. log, env and
-      output are valid values.'
-    default: 'output,log'
+      'Comma-separated list of targets to export variables to. Possible optoins:
+      env, output'
+    default: 'output'
   export_to_env_name:
     description: 'Environment variable name when export_to contains env'
     default: ''
@@ -36,6 +36,11 @@ inputs:
     description:
       'Default value, used when mode is fallback-to-default and not match was
       found'
+    default: ''
+  allow_empty_map:
+    description:
+      'Do not throw error when empty map was provided, requires mode to be other
+      than strict'
     default: ''
 
 # Define your outputs here.

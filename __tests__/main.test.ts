@@ -190,6 +190,107 @@ describe('correct input values, edge cases', () => {
   })
 })
 
+describe('allowed empty map', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+
+    errorMock = jest.spyOn(core, 'error').mockImplementation()
+    getInputMock = jest.spyOn(core, 'getInput').mockImplementation()
+    setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation()
+    setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation()
+    exportVariableMock = jest.spyOn(core, 'exportVariable').mockImplementation()
+  })
+
+  it('map not empty, fallback-to-default', () => {
+    const input: { [name: string]: string } = {
+      key: 'k1',
+      map: 'k1:v2',
+      separator: ':',
+      export_to: 'output',
+      mode: 'fallback-to-default',
+      allow_empty_map: '1'
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(setFailedMock).not.toHaveBeenCalled()
+
+    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'v2')
+  })
+
+  it('map not empty, strict', () => {
+    const input: { [name: string]: string } = {
+      key: 'k1',
+      map: 'k1:v2',
+      separator: ':',
+      export_to: 'output',
+      mode: 'strict',
+      allow_empty_map: '1'
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(setOutputMock).not.toHaveBeenCalled()
+
+    expect(setFailedMock).toHaveBeenNthCalledWith(
+      1,
+      'Strict mode is not possible when empty map is allowed'
+    )
+  })
+
+  it('map empty, fallback-to-default', () => {
+    const input: { [name: string]: string } = {
+      key: 'k1',
+      map: '',
+      separator: ':',
+      export_to: 'output',
+      mode: 'fallback-to-default',
+      default: 'v2',
+      allow_empty_map: '1'
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(setFailedMock).not.toHaveBeenCalled()
+
+    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'v2')
+  })
+
+  it('map empty, fallback-to-original', () => {
+    const input: { [name: string]: string } = {
+      key: 'k1',
+      map: '',
+      separator: ':',
+      export_to: 'output',
+      mode: 'fallback-to-original',
+      default: 'v2',
+      allow_empty_map: '1'
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(setFailedMock).not.toHaveBeenCalled()
+
+    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'k1')
+  })
+})
+
 describe('input validation', () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -204,7 +305,9 @@ describe('input validation', () => {
   it('empty key', () => {
     const input: { [name: string]: string } = {
       key: '',
-      map: 'k1:v1'
+      map: 'k1:v1',
+      mode: 'strict',
+      export_to: 'output'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -221,7 +324,9 @@ describe('input validation', () => {
   it('empty map', () => {
     const input: { [name: string]: string } = {
       key: 'k1',
-      map: ''
+      map: '',
+      mode: 'strict',
+      export_to: 'output'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -239,7 +344,9 @@ describe('input validation', () => {
     const input: { [name: string]: string } = {
       key: 'k1',
       map: 'k1:v1',
-      separator: ''
+      mode: 'strict',
+      separator: '',
+      export_to: 'output'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -253,12 +360,13 @@ describe('input validation', () => {
     expect(setFailedMock).toHaveBeenNthCalledWith(1, 'Separator is empty')
   })
 
-  it('incorrect export_to - empty', () => {
+  it('incorrect mode', () => {
     const input: { [name: string]: string } = {
       key: 'k1',
       map: 'k1:v1',
+      mode: 'invalid',
       separator: ':',
-      export_to: ''
+      export_to: 'env'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -275,10 +383,34 @@ describe('input validation', () => {
     )
   })
 
+  it('incorrect export_to - empty', () => {
+    const input: { [name: string]: string } = {
+      key: 'k1',
+      map: 'k1:v1',
+      mode: 'strict',
+      separator: ':',
+      export_to: ''
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(setOutputMock).not.toHaveBeenCalled()
+
+    expect(setFailedMock).toHaveBeenNthCalledWith(
+      1,
+      expect.stringMatching('Invalid export_to')
+    )
+  })
+
   it('incorrect export_to - invalid', () => {
     const input: { [name: string]: string } = {
       key: 'k1',
       map: 'k1:v1',
+      mode: 'strict',
       separator: ':',
       export_to: 'env,invalid'
     }
@@ -293,7 +425,7 @@ describe('input validation', () => {
 
     expect(setFailedMock).toHaveBeenNthCalledWith(
       1,
-      expect.stringMatching('Invalid mode')
+      expect.stringMatching('Invalid export_to')
     )
   })
 
