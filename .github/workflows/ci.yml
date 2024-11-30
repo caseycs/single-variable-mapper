@@ -53,14 +53,26 @@ jobs:
         id: checkout
         uses: actions/checkout@v4
 
-      - name: Test Local Action
-        id: test-action
+      - name: Test Local Action 1
+        id: test-action-1
         uses: ./
         with:
           key: staging-5
           map: |
             staging-\d+: staging
 
-      - name: Print Output
-        id: output
-        run: echo "${{ steps.test-action.outputs.value }}"
+      - name: Test Local Action 1 - print output
+        run: set -e; [ "${{ steps.test-action-1.outputs.value }}" == "staging" ]
+
+      - name: Test Local Action 2
+        id: test-action-2
+        uses: ./
+        with:
+          key: staging-5
+          allow_empty_map: true
+          mode: fallback-to-original
+          map: ''
+
+      - name: Test Local Action 2 - print output
+        run:
+          set -e; [ "${{ steps.test-action-2.outputs.value }}" == "staging-5" ]
