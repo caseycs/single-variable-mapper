@@ -62,7 +62,7 @@ export function run(): void {
 
     for (const pair of input.map) {
       core.debug(`Map pair: ${JSON.stringify(pair)}`)
-      if (new RegExp(`^${pair[0]}$`).test(input.key)) {
+      if (new RegExp(pair[0]).test(input.key)) {
         result = pair[1]
       }
     }

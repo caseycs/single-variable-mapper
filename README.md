@@ -7,22 +7,39 @@ Single-Variable-Mapper action maps variable by regular expressions.
 ### Map using regular expression
 
 ```yaml
-on: [push]
 name: single-variable-mapper example
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'Where to deploy'
+        required: true
+        default: 'staging.project.com'
+        type: choice
+        options:
+          - 'staging.project.com'
+          - 'staging-1.project.com'
+          - 'staging-2.project.com'
+          - 'sandbox.project.com'
+          - 'sandbox-1.project.com'
+          - 'sandbox-2.project.com'
+          - 'project.com'
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: caseycs/single-variable-mapper@master
+      - name: Map deployment target to environment config
+        uses: caseycs/single-variable-mapper@master
         id: mapper
         with:
-          key: staging-5
+          key: '${{ github.event.inputs.env }}'
           map: |
-            sandbox-\d+: sandbox
-            staging-\d+: staging
+            staging(-\d+)?: staging
+            sandbox(-\d+)?: sandbox
+            project.com: prod
       - name: Print mapped value
         run: echo ${{ steps.mapper.outputs.value }}
-        # staging
+        # staging for staging-X.project.com or staging.project.com
 ```
 
 ### Remap string value

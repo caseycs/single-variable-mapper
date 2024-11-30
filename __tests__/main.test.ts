@@ -70,7 +70,7 @@ describe('correct input values, successful cases', () => {
     expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'v2')
   })
 
-  it('regex string', () => {
+  it('regex full string', () => {
     const input: { [name: string]: string } = {
       key: 'staging-23',
       map: 'staging-\\d+:staging',
@@ -88,6 +88,49 @@ describe('correct input values, successful cases', () => {
     expect(exportVariableMock).not.toHaveBeenCalled()
 
     expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'staging')
+  })
+
+  it('regex partial string', () => {
+    const input: { [name: string]: string } = {
+      key: 'staging-23.project.com',
+      map: 'staging-\\d+:staging',
+      separator: ':',
+      export_to: 'output',
+      mode: 'strict'
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(setFailedMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+
+    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'staging')
+  })
+
+  it('regex partial string with ^ and $', () => {
+    const input: { [name: string]: string } = {
+      key: 'staging-23.project.com',
+      map: '^staging-\\d+$:staging',
+      separator: ':',
+      export_to: 'output',
+      mode: 'strict'
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(setOutputMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+
+    expect(setFailedMock).toHaveBeenNthCalledWith(
+      1,
+      'No suitable mapping found'
+    )
   })
 
   it('mode fallback-to-original', () => {
