@@ -62,7 +62,6 @@ jobs:
             staging-\d+: staging
 
       - name: Test Local Action 1 - print output
-        id: output
         run: set -e; [ "${{ steps.test-action-1.outputs.value }}" == "staging" ]
 
       - name: Test Local Action 2
@@ -74,5 +73,4 @@ jobs:
           mode: fallback-to-original
 
       - name: Test Local Action 2 - print output
-        id: output
         run: set -e; [ "${{ steps.test-action-2.outputs.value }}" == "staging-5" ]
