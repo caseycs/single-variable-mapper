@@ -306,6 +306,7 @@ describe('input validation', () => {
     const input: { [name: string]: string } = {
       key: '',
       map: 'k1:v1',
+      separator: ':',
       mode: 'strict',
       export_to: 'output'
     }

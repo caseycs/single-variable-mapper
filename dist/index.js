@@ -25711,15 +25711,9 @@ function run() {
         }
         // normal mode
         let result;
-        for (const line of input.map) {
-            core.debug(`Line: ${line}`);
-            const pair = line.split(input.separator); // Destructure key and value
-            if (pair.length != 2) {
-                throw new Error(`Pattern and value pair missing, incorrect map or separator: ${line}, separator ${input.separator}`);
-            }
-            const regex = new RegExp(`^${pair[0]}$`);
-            core.debug(`RegExp: ${regex}`);
-            if (regex.test(input.key)) {
+        for (const pair of input.map) {
+            core.debug(`Line pair: ${pair}`);
+            if (new RegExp(`^${pair[0]}$`).test(input.key)) {
                 result = pair[1];
             }
         }
@@ -25746,13 +25740,26 @@ function run() {
     }
 }
 function validateAndGetInput() {
+    if (core.getInput('separator') === '') {
+        throw new Error(`Separator is empty`);
+    }
+    let map = [];
+    for (let line of core.getInput('map').trim().split(/\r?\n/)) {
+        console.log(line);
+        line = line.trim();
+        if (line === '') {
+            continue;
+        }
+        console.log(line);
+        const pair = line.split(core.getInput('separator')).map(v => v.trim());
+        if (pair.length != 2) {
+            throw new Error(`Pattern and value pair missing, incorrect map or separator: ${line}, separator ${core.getInput('separator')}`);
+        }
+        map.push([pair[0], pair[1]]);
+    }
     const input = {
         key: core.getInput('key'),
-        map: core
-            .getInput('map')
-            .trim()
-            .split(/\r?\n/)
-            .map(e => e.trim()),
+        map: map,
         separator: core.getInput('separator'),
         mode: ModeReverse[core.getInput('mode')],
         export_to: core
@@ -25777,9 +25784,6 @@ function validateAndGetInput() {
     }
     else if (input.map.join('') === '') {
         throw new Error(`Map is empty`);
-    }
-    if (input.separator === '') {
-        throw new Error(`Separator is empty`);
     }
     if (input.export_to.filter(v => v === undefined).length) {
         throw new Error(`Invalid export_to: "${core.getInput('export_to')}". It must be one of: output, env`);
