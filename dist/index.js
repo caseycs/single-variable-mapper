@@ -25712,7 +25712,7 @@ function run() {
         // normal mode
         let result;
         for (const pair of input.map) {
-            core.debug(`Line pair: ${pair}`);
+            core.debug(`Map pair: ${JSON.stringify(pair)}`);
             if (new RegExp(`^${pair[0]}$`).test(input.key)) {
                 result = pair[1];
             }
@@ -25743,7 +25743,7 @@ function validateAndGetInput() {
     if (core.getInput('separator') === '') {
         throw new Error(`Separator is empty`);
     }
-    let map = [];
+    const map = [];
     for (let line of core.getInput('map').trim().split(/\r?\n/)) {
         console.log(line);
         line = line.trim();
