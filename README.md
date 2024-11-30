@@ -93,3 +93,21 @@ Also showcasing different output options
     echo ${{ steps.mapper.outputs.value }}
   # playground
 ```
+
+## Edge case - map can be empty
+
+Mode `strict` is not supported in this case
+
+```yaml
+- uses: caseycs/single-variable-mapper@master
+  id: mapper
+  with:
+    key: staging-5
+    map: ''
+    mode: fallback-to-original
+    allow_empty_map: true
+- name: Print mapped value
+  run: |
+    echo ${{ steps.mapper.outputs.value }}
+  # staging-5
+```
