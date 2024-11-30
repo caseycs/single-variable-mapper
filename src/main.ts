@@ -95,7 +95,7 @@ function validateAndGetInput(): Input {
     throw new Error(`Separator is empty`)
   }
 
-  let map: [string, string][] = []
+  const map: [string, string][] = []
   for (let line of core.getInput('map').trim().split(/\r?\n/)) {
     console.log(line)
     line = line.trim()
