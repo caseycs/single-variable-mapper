@@ -25740,6 +25740,9 @@ function run() {
     }
 }
 function validateAndGetInput() {
+    if (core.getInput('key') === '') {
+        throw new Error(`Key is empty`);
+    }
     if (core.getInput('separator') === '') {
         throw new Error(`Separator is empty`);
     }
@@ -25753,9 +25756,12 @@ function validateAndGetInput() {
         console.log(line);
         const pair = line.split(core.getInput('separator')).map(v => v.trim());
         if (pair.length != 2) {
-            throw new Error(`Pattern and value pair missing, incorrect map or separator: ${line}, separator ${core.getInput('separator')}`);
+            throw new Error(`Pattern and value pair missing, invalid map or separator: ${line}, separator ${core.getInput('separator')}`);
         }
         map.push([pair[0], pair[1]]);
+    }
+    if (!['true', 'false'].includes(core.getInput('allow_empty_map'))) {
+        throw new Error(`Invalid allow_empty_map: "${core.getInput('allow_empty_map')}". It must be one of: true, false`);
     }
     const input = {
         key: core.getInput('key'),
@@ -25768,12 +25774,8 @@ function validateAndGetInput() {
             .map(v => ExportToReverse[v.trim()]),
         export_to_env_name: core.getInput('export_to_env_name'),
         default_value: core.getInput('default'),
-        allow_empty_map: typeof core.getInput('allow_empty_map') === 'string' &&
-            core.getInput('allow_empty_map') != ''
+        allow_empty_map: core.getInput('allow_empty_map') === 'true'
     };
-    if (input.key === '') {
-        throw new Error(`Key is empty`);
-    }
     if (input.mode === undefined) {
         throw new Error(`Invalid mode: "${core.getInput('mode')}". It must be one of: strict, fallback-to-original, fallback-to-default`);
     }

@@ -36,7 +36,8 @@ describe('correct input values, successful cases', () => {
       map: 'k1:v1',
       separator: ':',
       export_to: 'output',
-      mode: 'strict'
+      mode: 'strict',
+      allow_empty_map: 'false'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -56,7 +57,8 @@ describe('correct input values, successful cases', () => {
       map: 'k1:v1\nk2:v2',
       separator: ':',
       export_to: 'output',
-      mode: 'strict'
+      mode: 'strict',
+      allow_empty_map: 'false'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -76,7 +78,8 @@ describe('correct input values, successful cases', () => {
       map: 'staging-\\d+:staging',
       separator: ':',
       export_to: 'output',
-      mode: 'strict'
+      mode: 'strict',
+      allow_empty_map: 'false'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -96,7 +99,8 @@ describe('correct input values, successful cases', () => {
       map: 'staging-\\d+:staging',
       separator: ':',
       export_to: 'output',
-      mode: 'strict'
+      mode: 'strict',
+      allow_empty_map: 'false'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -116,7 +120,8 @@ describe('correct input values, successful cases', () => {
       map: '^staging-\\d+$:staging',
       separator: ':',
       export_to: 'output',
-      mode: 'strict'
+      mode: 'strict',
+      allow_empty_map: 'false'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -139,7 +144,8 @@ describe('correct input values, successful cases', () => {
       map: 'staging-d+:staging',
       separator: ':',
       export_to: 'output',
-      mode: 'fallback-to-original'
+      mode: 'fallback-to-original',
+      allow_empty_map: 'false'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -160,7 +166,8 @@ describe('correct input values, successful cases', () => {
       separator: ':',
       export_to: 'output',
       mode: 'fallback-to-default',
-      default: 'default-value'
+      default: 'default-value',
+      allow_empty_map: 'false'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -182,7 +189,8 @@ describe('correct input values, successful cases', () => {
       export_to: 'output,env',
       export_to_env_name: 'test',
       mode: 'strict',
-      default: ''
+      default: '',
+      allow_empty_map: 'false'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -215,7 +223,8 @@ describe('correct input values, edge cases', () => {
       map: 'k2:v2',
       separator: ':',
       export_to: 'output',
-      mode: 'strict'
+      mode: 'strict',
+      allow_empty_map: 'false'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -251,7 +260,7 @@ describe('allowed empty map', () => {
       separator: ':',
       export_to: 'output',
       mode: 'fallback-to-default',
-      allow_empty_map: '1'
+      allow_empty_map: 'true'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -272,7 +281,7 @@ describe('allowed empty map', () => {
       separator: ':',
       export_to: 'output',
       mode: 'strict',
-      allow_empty_map: '1'
+      allow_empty_map: 'true'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -297,7 +306,7 @@ describe('allowed empty map', () => {
       export_to: 'output',
       mode: 'fallback-to-default',
       default: 'v2',
-      allow_empty_map: '1'
+      allow_empty_map: 'true'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -319,7 +328,7 @@ describe('allowed empty map', () => {
       export_to: 'output',
       mode: 'fallback-to-original',
       default: 'v2',
-      allow_empty_map: '1'
+      allow_empty_map: 'true'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -351,7 +360,8 @@ describe('input validation', () => {
       map: 'k1:v1',
       separator: ':',
       mode: 'strict',
-      export_to: 'output'
+      export_to: 'output',
+      allow_empty_map: 'false'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -370,7 +380,8 @@ describe('input validation', () => {
       key: 'k1',
       map: '',
       mode: 'strict',
-      export_to: 'output'
+      export_to: 'output',
+      allow_empty_map: 'false'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -390,7 +401,8 @@ describe('input validation', () => {
       map: 'k1:v1',
       mode: 'strict',
       separator: '',
-      export_to: 'output'
+      export_to: 'output',
+      allow_empty_map: 'false'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -404,13 +416,14 @@ describe('input validation', () => {
     expect(setFailedMock).toHaveBeenNthCalledWith(1, 'Separator is empty')
   })
 
-  it('incorrect mode', () => {
+  it('invalid mode', () => {
     const input: { [name: string]: string } = {
       key: 'k1',
       map: 'k1:v1',
       mode: 'invalid',
       separator: ':',
-      export_to: 'env'
+      export_to: 'env',
+      allow_empty_map: 'false'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -427,13 +440,14 @@ describe('input validation', () => {
     )
   })
 
-  it('incorrect export_to - empty', () => {
+  it('invalid export_to - empty', () => {
     const input: { [name: string]: string } = {
       key: 'k1',
       map: 'k1:v1',
       mode: 'strict',
       separator: ':',
-      export_to: ''
+      export_to: '',
+      allow_empty_map: 'false'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -450,13 +464,14 @@ describe('input validation', () => {
     )
   })
 
-  it('incorrect export_to - invalid', () => {
+  it('invalid export_to - invalid', () => {
     const input: { [name: string]: string } = {
       key: 'k1',
       map: 'k1:v1',
       mode: 'strict',
       separator: ':',
-      export_to: 'env,invalid'
+      export_to: 'env,invalid',
+      allow_empty_map: 'false'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -480,7 +495,8 @@ describe('input validation', () => {
       separator: ':',
       mode: 'strict',
       export_to: 'env',
-      export_to_env_name: ''
+      export_to_env_name: '',
+      allow_empty_map: 'false'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -497,13 +513,14 @@ describe('input validation', () => {
     )
   })
 
-  it('incorrect separator or map line - one piece', () => {
+  it('invalid separator or map line - one piece', () => {
     const input: { [name: string]: string } = {
       key: 'k1',
       map: 'k1:v1',
       separator: '|',
       mode: 'strict',
-      export_to: 'output'
+      export_to: 'output',
+      allow_empty_map: 'false'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -520,13 +537,14 @@ describe('input validation', () => {
     )
   })
 
-  it('incorrect separator or map line - 3 pieces', () => {
+  it('invalid separator or map line - 3 pieces', () => {
     const input: { [name: string]: string } = {
       key: 'k1',
       map: 'k1:v1:v2',
       separator: ':',
       mode: 'strict',
-      export_to: 'output'
+      export_to: 'output',
+      allow_empty_map: 'false'
     }
     getInputMock.mockImplementation(name => input[name])
 
@@ -540,6 +558,30 @@ describe('input validation', () => {
     expect(setFailedMock).toHaveBeenNthCalledWith(
       1,
       expect.stringMatching('Pattern and value pair missing')
+    )
+  })
+
+  it('invalid allow_empty_map', () => {
+    const input: { [name: string]: string } = {
+      key: 'k1',
+      map: 'k1:v1',
+      separator: ':',
+      mode: 'strict',
+      export_to: 'output',
+      allow_empty_map: 'bla'
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(setOutputMock).not.toHaveBeenCalled()
+
+    expect(setFailedMock).toHaveBeenNthCalledWith(
+      1,
+      expect.stringMatching('Invalid allow_empty_map')
     )
   })
 })

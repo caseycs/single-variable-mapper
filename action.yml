@@ -41,7 +41,7 @@ inputs:
     description:
       'Do not throw error when empty map was provided, requires mode to be other
       than strict'
-    default: ''
+    default: 'false'
 
 # Define your outputs here.
 outputs:
