@@ -584,4 +584,28 @@ describe('input validation', () => {
       expect.stringMatching('Invalid allow_empty_map')
     )
   })
+
+  it('invalid regex pattern', () => {
+    const input: { [name: string]: string } = {
+      key: 'k1',
+      map: '[invalid(regex:value',
+      separator: ':',
+      mode: 'strict',
+      export_to: 'output',
+      allow_empty_map: 'false'
+    }
+    getInputMock.mockImplementation(name => input[name])
+
+    main.run()
+    expect(runMock).toHaveReturned()
+
+    expect(errorMock).not.toHaveBeenCalled()
+    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(setOutputMock).not.toHaveBeenCalled()
+
+    expect(setFailedMock).toHaveBeenNthCalledWith(
+      1,
+      expect.stringMatching('Invalid regex pattern')
+    )
+  })
 })

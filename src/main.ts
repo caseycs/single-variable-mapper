@@ -57,13 +57,15 @@ export function run(): void {
       }
     }
 
-    // normal mode
+    // normal mode - uses first matching pattern
     let result: string | undefined
 
     for (const pair of input.map) {
       core.debug(`Map pair: ${JSON.stringify(pair)}`)
       if (new RegExp(pair[0]).test(input.key)) {
         result = pair[1]
+        core.debug(`Match found: ${pair[0]} -> ${pair[1]}`)
+        break
       }
     }
 
@@ -101,18 +103,28 @@ function validateAndGetInput(): Input {
 
   const map: [string, string][] = []
   for (let line of core.getInput('map').trim().split(/\r?\n/)) {
-    console.log(line)
+    core.debug(`Processing map line: ${line}`)
     line = line.trim()
     if (line === '') {
       continue
     }
-    console.log(line)
+    core.debug(`Parsing map line: ${line}`)
     const pair = line.split(core.getInput('separator')).map(v => v.trim())
-    if (pair.length != 2) {
+    if (pair.length !== 2) {
       throw new Error(
         `Pattern and value pair missing, invalid map or separator: ${line}, separator ${core.getInput('separator')}`
       )
     }
+
+    // Validate regex pattern
+    try {
+      new RegExp(pair[0])
+    } catch (err) {
+      throw new Error(
+        `Invalid regex pattern: "${pair[0]}" - ${err instanceof Error ? err.message : String(err)}`
+      )
+    }
+
     map.push([pair[0], pair[1]])
   }
 
@@ -134,7 +146,7 @@ function validateAndGetInput(): Input {
     export_to_env_name: core.getInput('export_to_env_name'),
     default_value: core.getInput('default'),
     allow_empty_map: core.getInput('allow_empty_map') === 'true'
-  } as const
+  }
 
   if (input.mode === undefined) {
     throw new Error(

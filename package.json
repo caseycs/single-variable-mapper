@@ -1,21 +1,25 @@
 {
-  "name": "typescript-action",
-  "description": "GitHub Actions TypeScript template",
+  "name": "single-variable-mapper",
+  "description": "GitHub Action to simplify variable remapping using regex patterns",
   "version": "0.0.0",
-  "author": "",
+  "author": "caseycs",
   "private": true,
-  "homepage": "https://github.com/actions/typescript-action",
+  "homepage": "https://github.com/caseycs/single-variable-mapper",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/caseycs/single-variable-mapper.git"
   },
   "bugs": {
-    "url": "https://github.com/actions/typescript-action/issues"
+    "url": "https://github.com/caseycs/single-variable-mapper/issues"
   },
   "keywords": [
-    "actions",
-    "node",
-    "setup"
+    "github-actions",
+    "regex",
+    "mapping",
+    "deployment",
+    "ci-cd",
+    "variable-mapping",
+    "environment"
   ],
   "exports": {
     ".": "./dist/index.js"
