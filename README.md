@@ -128,3 +128,4 @@ Mode `strict` is not supported in this case
     echo ${{ steps.mapper.outputs.value }}
   # staging-5
 ```
+
