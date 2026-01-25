@@ -2,6 +2,9 @@
 
 Single-Variable-Mapper action maps variable by regular expressions.
 
+[![Build & Deploy](https://github.com/caseycs/single-variable-mapper/actions/workflows/ci.yml/badge.svg)](https://github.com/caseycs/single-variable-mapper/actions/workflows/ci.yml)
+[![Coverage Status](badges/coverage.svg)](https://github.com/caseycs/single-variable-mapper/actions)
+
 ## Sample Workflows
 
 ### Map using regular expression
