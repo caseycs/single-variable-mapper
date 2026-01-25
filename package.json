@@ -30,8 +30,8 @@
     "format:check": "npx prettier --check .",
     "lint": "npm run lint:eslint && npm run lint:md && npm run lint:yaml",
     "lint:eslint": "npx eslint . -c ./.github/linters/eslint.config.mjs",
-    "lint:md": "npx markdownlint-cli2 \"**/*.md\" \"!node_modules\" \"!dist\"",
-    "lint:yaml": "npx yamllint \"**/*.{yml,yaml}\" -i \"node_modules/**\" -i \"dist/**\"",
+    "lint:md": "npx markdownlint-cli2 --config .github/linters/.markdownlint.yml \"**/*.md\" \"!node_modules\" \"!dist\"",
+    "lint:yaml": "npx yamllint \"**/*.{yml,yaml}\" -c .github/linters/.yaml-lint.yml -i \"node_modules/**\" -i \"dist/**\"",
     "local-action": "npx local-action . src/main.ts .env",
     "package": "npx ncc build src/index.ts -o dist --source-map --license licenses.txt",
     "package:watch": "npm run package -- --watch",
@@ -72,7 +72,7 @@
     "@actions/core": "^1.11.1"
   },
   "devDependencies": {
-    "@github/local-action": "^2.2.1",
+    "@github/local-action": "^7.0.0",
     "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.9",
