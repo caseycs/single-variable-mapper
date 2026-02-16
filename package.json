@@ -77,7 +77,7 @@
   },
   "devDependencies": {
     "@github/local-action": "^7.0.0",
-    "@jest/globals": "^29.7.0",
+    "@jest/globals": "^30.2.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.9",
     "@typescript-eslint/eslint-plugin": "^8.56.0",
