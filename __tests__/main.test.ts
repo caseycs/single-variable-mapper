@@ -6,28 +6,17 @@
  * variables following the pattern `INPUT_<INPUT_NAME>`.
  */
 
-import * as core from '@actions/core'
 import * as main from '../src/main'
+import { type MockSpies, setupMocks } from './helpers'
 
 // Mock the action's main function
 const runMock = jest.spyOn(main, 'run')
 
-// Mock the GitHub Actions core library
-let errorMock: jest.SpiedFunction<typeof core.error>
-let getInputMock: jest.SpiedFunction<typeof core.getInput>
-let setFailedMock: jest.SpiedFunction<typeof core.setFailed>
-let setOutputMock: jest.SpiedFunction<typeof core.setOutput>
-let exportVariableMock: jest.SpiedFunction<typeof core.exportVariable>
+let mocks: MockSpies
 
 describe('correct input values, successful cases', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
-
-    errorMock = jest.spyOn(core, 'error').mockImplementation()
-    getInputMock = jest.spyOn(core, 'getInput').mockImplementation()
-    setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation()
-    setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation()
-    exportVariableMock = jest.spyOn(core, 'exportVariable').mockImplementation()
+    mocks = setupMocks()
   })
 
   it('strict string on 1st line', () => {
@@ -39,16 +28,16 @@ describe('correct input values, successful cases', () => {
       mode: 'strict',
       allow_empty_map: 'false'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(setFailedMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.setFailedMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
 
-    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'v1')
+    expect(mocks.setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'v1')
   })
 
   it('strict string on 2nd line', () => {
@@ -60,16 +49,16 @@ describe('correct input values, successful cases', () => {
       mode: 'strict',
       allow_empty_map: 'false'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(setFailedMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.setFailedMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
 
-    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'v2')
+    expect(mocks.setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'v2')
   })
 
   it('regex full string', () => {
@@ -81,16 +70,16 @@ describe('correct input values, successful cases', () => {
       mode: 'strict',
       allow_empty_map: 'false'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(setFailedMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.setFailedMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
 
-    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'staging')
+    expect(mocks.setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'staging')
   })
 
   it('regex partial string', () => {
@@ -102,16 +91,16 @@ describe('correct input values, successful cases', () => {
       mode: 'strict',
       allow_empty_map: 'false'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(setFailedMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.setFailedMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
 
-    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'staging')
+    expect(mocks.setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'staging')
   })
 
   it('regex partial string with ^ and $', () => {
@@ -123,16 +112,16 @@ describe('correct input values, successful cases', () => {
       mode: 'strict',
       allow_empty_map: 'false'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(setOutputMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.setOutputMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
 
-    expect(setFailedMock).toHaveBeenNthCalledWith(
+    expect(mocks.setFailedMock).toHaveBeenNthCalledWith(
       1,
       'No suitable mapping found'
     )
@@ -147,16 +136,20 @@ describe('correct input values, successful cases', () => {
       mode: 'fallback-to-original',
       allow_empty_map: 'false'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(setFailedMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.setFailedMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
 
-    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'sandbox-25')
+    expect(mocks.setOutputMock).toHaveBeenNthCalledWith(
+      1,
+      'value',
+      'sandbox-25'
+    )
   })
 
   it('mode fallback-to-default', () => {
@@ -169,16 +162,20 @@ describe('correct input values, successful cases', () => {
       default: 'default-value',
       allow_empty_map: 'false'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(setFailedMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.setFailedMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
 
-    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'default-value')
+    expect(mocks.setOutputMock).toHaveBeenNthCalledWith(
+      1,
+      'value',
+      'default-value'
+    )
   })
 
   it('outputs and separator', () => {
@@ -192,29 +189,22 @@ describe('correct input values, successful cases', () => {
       default: '',
       allow_empty_map: 'false'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(setFailedMock).not.toHaveBeenCalled()
-    expect(errorMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.setFailedMock).not.toHaveBeenCalled()
 
-    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'v1')
-    expect(exportVariableMock).toHaveBeenNthCalledWith(1, 'test', 'v1')
+    expect(mocks.setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'v1')
+    expect(mocks.exportVariableMock).toHaveBeenNthCalledWith(1, 'test', 'v1')
   })
 })
 
 describe('correct input values, edge cases', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
-
-    errorMock = jest.spyOn(core, 'error').mockImplementation()
-    getInputMock = jest.spyOn(core, 'getInput').mockImplementation()
-    setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation()
-    setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation()
-    exportVariableMock = jest.spyOn(core, 'exportVariable').mockImplementation()
+    mocks = setupMocks()
   })
 
   it('strict mode, key not found', () => {
@@ -226,16 +216,16 @@ describe('correct input values, edge cases', () => {
       mode: 'strict',
       allow_empty_map: 'false'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
-    expect(setOutputMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.setOutputMock).not.toHaveBeenCalled()
 
-    expect(setFailedMock).toHaveBeenNthCalledWith(
+    expect(mocks.setFailedMock).toHaveBeenNthCalledWith(
       1,
       'No suitable mapping found'
     )
@@ -244,13 +234,7 @@ describe('correct input values, edge cases', () => {
 
 describe('allowed empty map', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
-
-    errorMock = jest.spyOn(core, 'error').mockImplementation()
-    getInputMock = jest.spyOn(core, 'getInput').mockImplementation()
-    setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation()
-    setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation()
-    exportVariableMock = jest.spyOn(core, 'exportVariable').mockImplementation()
+    mocks = setupMocks()
   })
 
   it('map not empty, fallback-to-default', () => {
@@ -262,16 +246,16 @@ describe('allowed empty map', () => {
       mode: 'fallback-to-default',
       allow_empty_map: 'true'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
-    expect(setFailedMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.setFailedMock).not.toHaveBeenCalled()
 
-    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'v2')
+    expect(mocks.setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'v2')
   })
 
   it('map not empty, strict', () => {
@@ -283,16 +267,16 @@ describe('allowed empty map', () => {
       mode: 'strict',
       allow_empty_map: 'true'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
-    expect(setOutputMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.setOutputMock).not.toHaveBeenCalled()
 
-    expect(setFailedMock).toHaveBeenNthCalledWith(
+    expect(mocks.setFailedMock).toHaveBeenNthCalledWith(
       1,
       'Strict mode is not possible when empty map is allowed'
     )
@@ -308,16 +292,16 @@ describe('allowed empty map', () => {
       default: 'v2',
       allow_empty_map: 'true'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
-    expect(setFailedMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.setFailedMock).not.toHaveBeenCalled()
 
-    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'v2')
+    expect(mocks.setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'v2')
   })
 
   it('map empty, fallback-to-original', () => {
@@ -330,28 +314,22 @@ describe('allowed empty map', () => {
       default: 'v2',
       allow_empty_map: 'true'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
-    expect(setFailedMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.setFailedMock).not.toHaveBeenCalled()
 
-    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'k1')
+    expect(mocks.setOutputMock).toHaveBeenNthCalledWith(1, 'value', 'k1')
   })
 })
 
 describe('input validation', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
-
-    errorMock = jest.spyOn(core, 'error').mockImplementation()
-    getInputMock = jest.spyOn(core, 'getInput').mockImplementation()
-    setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation()
-    setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation()
-    exportVariableMock = jest.spyOn(core, 'exportVariable').mockImplementation()
+    mocks = setupMocks()
   })
 
   it('empty key', () => {
@@ -363,16 +341,16 @@ describe('input validation', () => {
       export_to: 'output',
       allow_empty_map: 'false'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
-    expect(setOutputMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.setOutputMock).not.toHaveBeenCalled()
 
-    expect(setFailedMock).toHaveBeenNthCalledWith(1, 'Key is empty')
+    expect(mocks.setFailedMock).toHaveBeenNthCalledWith(1, 'Key is empty')
   })
 
   it('empty map', () => {
@@ -383,16 +361,16 @@ describe('input validation', () => {
       export_to: 'output',
       allow_empty_map: 'false'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
-    expect(setOutputMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.setOutputMock).not.toHaveBeenCalled()
 
-    expect(setFailedMock).toHaveBeenNthCalledWith(1, 'Map is empty')
+    expect(mocks.setFailedMock).toHaveBeenNthCalledWith(1, 'Map is empty')
   })
 
   it('empty separator', () => {
@@ -404,16 +382,16 @@ describe('input validation', () => {
       export_to: 'output',
       allow_empty_map: 'false'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
-    expect(setOutputMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.setOutputMock).not.toHaveBeenCalled()
 
-    expect(setFailedMock).toHaveBeenNthCalledWith(1, 'Separator is empty')
+    expect(mocks.setFailedMock).toHaveBeenNthCalledWith(1, 'Separator is empty')
   })
 
   it('invalid mode', () => {
@@ -425,16 +403,16 @@ describe('input validation', () => {
       export_to: 'env',
       allow_empty_map: 'false'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
-    expect(setOutputMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.setOutputMock).not.toHaveBeenCalled()
 
-    expect(setFailedMock).toHaveBeenNthCalledWith(
+    expect(mocks.setFailedMock).toHaveBeenNthCalledWith(
       1,
       expect.stringMatching('Invalid mode')
     )
@@ -449,16 +427,16 @@ describe('input validation', () => {
       export_to: '',
       allow_empty_map: 'false'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
-    expect(setOutputMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.setOutputMock).not.toHaveBeenCalled()
 
-    expect(setFailedMock).toHaveBeenNthCalledWith(
+    expect(mocks.setFailedMock).toHaveBeenNthCalledWith(
       1,
       expect.stringMatching('Invalid export_to')
     )
@@ -473,16 +451,16 @@ describe('input validation', () => {
       export_to: 'env,invalid',
       allow_empty_map: 'false'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
-    expect(setOutputMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.setOutputMock).not.toHaveBeenCalled()
 
-    expect(setFailedMock).toHaveBeenNthCalledWith(
+    expect(mocks.setFailedMock).toHaveBeenNthCalledWith(
       1,
       expect.stringMatching('Invalid export_to')
     )
@@ -498,16 +476,16 @@ describe('input validation', () => {
       export_to_env_name: '',
       allow_empty_map: 'false'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
-    expect(setOutputMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.setOutputMock).not.toHaveBeenCalled()
 
-    expect(setFailedMock).toHaveBeenNthCalledWith(
+    expect(mocks.setFailedMock).toHaveBeenNthCalledWith(
       1,
       expect.stringMatching('Empty export_to_env_name')
     )
@@ -522,16 +500,16 @@ describe('input validation', () => {
       export_to: 'output',
       allow_empty_map: 'false'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
-    expect(setOutputMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.setOutputMock).not.toHaveBeenCalled()
 
-    expect(setFailedMock).toHaveBeenNthCalledWith(
+    expect(mocks.setFailedMock).toHaveBeenNthCalledWith(
       1,
       expect.stringMatching('Pattern and value pair missing')
     )
@@ -546,16 +524,16 @@ describe('input validation', () => {
       export_to: 'output',
       allow_empty_map: 'false'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
-    expect(setOutputMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.setOutputMock).not.toHaveBeenCalled()
 
-    expect(setFailedMock).toHaveBeenNthCalledWith(
+    expect(mocks.setFailedMock).toHaveBeenNthCalledWith(
       1,
       expect.stringMatching('Pattern and value pair missing')
     )
@@ -570,16 +548,16 @@ describe('input validation', () => {
       export_to: 'output',
       allow_empty_map: 'bla'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
-    expect(setOutputMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.setOutputMock).not.toHaveBeenCalled()
 
-    expect(setFailedMock).toHaveBeenNthCalledWith(
+    expect(mocks.setFailedMock).toHaveBeenNthCalledWith(
       1,
       expect.stringMatching('Invalid allow_empty_map')
     )
@@ -594,16 +572,16 @@ describe('input validation', () => {
       export_to: 'output',
       allow_empty_map: 'false'
     }
-    getInputMock.mockImplementation(name => input[name])
+    mocks.getInputMock.mockImplementation(name => input[name])
 
     main.run()
     expect(runMock).toHaveReturned()
 
-    expect(errorMock).not.toHaveBeenCalled()
-    expect(exportVariableMock).not.toHaveBeenCalled()
-    expect(setOutputMock).not.toHaveBeenCalled()
+    expect(mocks.errorMock).not.toHaveBeenCalled()
+    expect(mocks.exportVariableMock).not.toHaveBeenCalled()
+    expect(mocks.setOutputMock).not.toHaveBeenCalled()
 
-    expect(setFailedMock).toHaveBeenNthCalledWith(
+    expect(mocks.setFailedMock).toHaveBeenNthCalledWith(
       1,
       expect.stringMatching('Invalid regex pattern')
     )
