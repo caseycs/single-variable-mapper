@@ -25,14 +25,12 @@ const ModeReverse: Record<string, Mode> = {
 
 enum ExportTo {
   Env = 'env',
-  Output = 'output',
-  Log = 'log'
+  Output = 'output'
 }
 
 const ExportToReverse: Record<string, ExportTo> = {
   env: ExportTo.Env,
-  output: ExportTo.Output,
-  log: ExportTo.Log
+  output: ExportTo.Output
 }
 
 /**
@@ -44,7 +42,7 @@ export function run(): void {
     const input = validateAndGetInput()
 
     // empty map
-    if (input.allow_empty_map && input.map.join('') === '') {
+    if (input.allow_empty_map && input.map.length === 0) {
       switch (input.mode) {
         case Mode.FallbackOriginal:
           setOutput(input, input.key)
@@ -88,6 +86,8 @@ export function run(): void {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) {
       core.setFailed(error.message)
+    } else {
+      core.setFailed(`Unexpected error: ${String(error)}`)
     }
   }
 }
@@ -102,9 +102,9 @@ function validateAndGetInput(): Input {
   }
 
   const map: [string, string][] = []
-  for (let line of core.getInput('map').trim().split(/\r?\n/)) {
-    core.debug(`Processing map line: ${line}`)
-    line = line.trim()
+  for (const rawLine of core.getInput('map').trim().split(/\r?\n/)) {
+    core.debug(`Processing map line: ${rawLine}`)
+    const line = rawLine.trim()
     if (line === '') {
       continue
     }
@@ -158,7 +158,7 @@ function validateAndGetInput(): Input {
     if (input.mode === Mode.Strict) {
       throw new Error(`Strict mode is not possible when empty map is allowed`)
     }
-  } else if (input.map.join('') === '') {
+  } else if (input.map.length === 0) {
     throw new Error(`Map is empty`)
   }
 
@@ -170,7 +170,7 @@ function validateAndGetInput(): Input {
 
   if (
     input.export_to.includes(ExportTo.Env) &&
-    input.export_to_env_name == ''
+    input.export_to_env_name === ''
   ) {
     throw new Error(
       `Empty export_to_env_name: it's required when export_to contains env`

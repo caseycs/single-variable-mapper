@@ -18,7 +18,7 @@ inputs:
     required: true
   export_to:
     description:
-      'Comma-separated list of targets to export variables to. Possible optoins:
+      'Comma-separated list of targets to export variables to. Possible options:
       env, output'
     default: 'output'
   export_to_env_name:
