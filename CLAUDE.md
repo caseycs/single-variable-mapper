@@ -1,6 +1,7 @@
 # single-variable-mapper
 
-GitHub Action that maps a key to a value using regex pattern matching. Used in CI/CD workflows to remap variables (e.g., branch names to environment names).
+GitHub Action that maps a key to a value using regex pattern matching. Used in
+CI/CD workflows to remap variables (e.g., branch names to environment names).
 
 ## Project Structure
 

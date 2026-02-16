@@ -14,8 +14,6 @@ export function setupMocks(): MockSpies {
     getInputMock: jest.spyOn(core, 'getInput').mockImplementation(),
     setFailedMock: jest.spyOn(core, 'setFailed').mockImplementation(),
     setOutputMock: jest.spyOn(core, 'setOutput').mockImplementation(),
-    exportVariableMock: jest
-      .spyOn(core, 'exportVariable')
-      .mockImplementation()
+    exportVariableMock: jest.spyOn(core, 'exportVariable').mockImplementation()
   }
 }
