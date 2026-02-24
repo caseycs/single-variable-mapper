@@ -73,7 +73,7 @@
     ]
   },
   "dependencies": {
-    "@actions/core": "^2.0.2"
+    "@actions/core": "^3.0.0"
   },
   "devDependencies": {
     "@github/local-action": "^7.0.1",
