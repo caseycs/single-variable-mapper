@@ -22,6 +22,7 @@ export default [
       '**/node_modules/',
       '**/dist/',
       '**/coverage/',
+      '**/__mocks__/',
       '**/*.json',
       '.github/linters/eslint.config.mjs'
     ]
