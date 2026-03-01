@@ -19097,7 +19097,8 @@ function validateAndGetInput() {
       new RegExp(pair[0]);
     } catch (err) {
       throw new Error(
-        `Invalid regex pattern: "${pair[0]}" - ${err instanceof Error ? err.message : String(err)}`
+        `Invalid regex pattern: "${pair[0]}" - ${err instanceof Error ? err.message : String(err)}`,
+        { cause: err }
       );
     }
     map.push([pair[0], pair[1]]);
