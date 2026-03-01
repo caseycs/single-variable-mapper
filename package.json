@@ -23,7 +23,7 @@
     "environment"
   ],
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.cjs"
   },
   "engines": {
     "node": ">=21"
@@ -38,7 +38,7 @@
     "lint:md": "npx markdownlint-cli2 --config .github/linters/.markdownlint.yml \"**/*.md\" \"!node_modules\" \"!dist\"",
     "lint:yaml": "npx yamllint \"**/*.{yml,yaml}\" -c .github/linters/.yaml-lint.yml -i \"node_modules/**\" -i \"dist/**\"",
     "local-action": "npx local-action . src/main.ts .env",
-    "package": "npx esbuild src/index.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/index.js --sourcemap",
+    "package": "npx esbuild src/index.ts --bundle --platform=node --target=node20 --outfile=dist/index.cjs --sourcemap",
     "test": "NODE_OPTIONS=--experimental-vm-modules NODE_NO_WARNINGS=1 npx jest",
     "all": "npm run format:write && npm run lint && npm run test && npm run coverage && npm run package"
   },
