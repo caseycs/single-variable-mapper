@@ -6,11 +6,13 @@
  * variables following the pattern `INPUT_<INPUT_NAME>`.
  */
 
-import * as main from '../src/main'
-import { type MockSpies, setupMocks } from './helpers'
+import { jest } from '@jest/globals'
+import * as core from '../__fixtures__/core.js'
+import { type MockSpies, setupMocks } from './helpers.js'
 
-// Mock the action's main function
-const runMock = jest.spyOn(main, 'run')
+jest.unstable_mockModule('@actions/core', () => core)
+
+const { run } = await import('../src/main.js')
 
 let mocks: MockSpies
 
@@ -30,8 +32,7 @@ describe('correct input values, successful cases', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.setFailedMock).not.toHaveBeenCalled()
@@ -51,8 +52,7 @@ describe('correct input values, successful cases', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.setFailedMock).not.toHaveBeenCalled()
@@ -72,8 +72,7 @@ describe('correct input values, successful cases', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.setFailedMock).not.toHaveBeenCalled()
@@ -93,8 +92,7 @@ describe('correct input values, successful cases', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.setFailedMock).not.toHaveBeenCalled()
@@ -114,8 +112,7 @@ describe('correct input values, successful cases', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.setOutputMock).not.toHaveBeenCalled()
@@ -138,8 +135,7 @@ describe('correct input values, successful cases', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.setFailedMock).not.toHaveBeenCalled()
@@ -164,8 +160,7 @@ describe('correct input values, successful cases', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.setFailedMock).not.toHaveBeenCalled()
@@ -191,8 +186,7 @@ describe('correct input values, successful cases', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.setFailedMock).not.toHaveBeenCalled()
@@ -218,8 +212,7 @@ describe('correct input values, edge cases', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.exportVariableMock).not.toHaveBeenCalled()
@@ -248,8 +241,7 @@ describe('allowed empty map', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.exportVariableMock).not.toHaveBeenCalled()
@@ -269,8 +261,7 @@ describe('allowed empty map', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.exportVariableMock).not.toHaveBeenCalled()
@@ -294,8 +285,7 @@ describe('allowed empty map', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.exportVariableMock).not.toHaveBeenCalled()
@@ -316,8 +306,7 @@ describe('allowed empty map', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.exportVariableMock).not.toHaveBeenCalled()
@@ -343,8 +332,7 @@ describe('input validation', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.exportVariableMock).not.toHaveBeenCalled()
@@ -363,8 +351,7 @@ describe('input validation', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.exportVariableMock).not.toHaveBeenCalled()
@@ -384,8 +371,7 @@ describe('input validation', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.exportVariableMock).not.toHaveBeenCalled()
@@ -405,8 +391,7 @@ describe('input validation', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.exportVariableMock).not.toHaveBeenCalled()
@@ -429,8 +414,7 @@ describe('input validation', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.exportVariableMock).not.toHaveBeenCalled()
@@ -453,8 +437,7 @@ describe('input validation', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.exportVariableMock).not.toHaveBeenCalled()
@@ -478,8 +461,7 @@ describe('input validation', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.exportVariableMock).not.toHaveBeenCalled()
@@ -502,8 +484,7 @@ describe('input validation', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.exportVariableMock).not.toHaveBeenCalled()
@@ -526,8 +507,7 @@ describe('input validation', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.exportVariableMock).not.toHaveBeenCalled()
@@ -550,8 +530,7 @@ describe('input validation', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.exportVariableMock).not.toHaveBeenCalled()
@@ -574,8 +553,7 @@ describe('input validation', () => {
     }
     mocks.getInputMock.mockImplementation(name => input[name])
 
-    main.run()
-    expect(runMock).toHaveReturned()
+    run()
 
     expect(mocks.errorMock).not.toHaveBeenCalled()
     expect(mocks.exportVariableMock).not.toHaveBeenCalled()

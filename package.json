@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "author": "caseycs",
   "private": true,
+  "type": "module",
   "homepage": "https://github.com/caseycs/single-variable-mapper",
   "repository": {
     "type": "git",
@@ -38,39 +39,10 @@
     "lint:yaml": "npx yamllint \"**/*.{yml,yaml}\" -c .github/linters/.yaml-lint.yml -i \"node_modules/**\" -i \"dist/**\"",
     "local-action": "npx local-action . src/main.ts .env",
     "package": "npx esbuild src/index.ts --bundle --platform=node --target=node20 --outfile=dist/index.js --sourcemap",
-    "test": "npx jest",
+    "test": "NODE_OPTIONS=--experimental-vm-modules NODE_NO_WARNINGS=1 npx jest",
     "all": "npm run format:write && npm run lint && npm run test && npm run coverage && npm run package"
   },
   "license": "MIT",
-  "jest": {
-    "preset": "ts-jest",
-    "verbose": true,
-    "clearMocks": true,
-    "testEnvironment": "node",
-    "moduleFileExtensions": [
-      "js",
-      "ts"
-    ],
-    "testMatch": [
-      "**/*.test.ts"
-    ],
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/dist/"
-    ],
-    "transform": {
-      "^.+\\.ts$": "ts-jest"
-    },
-    "coverageReporters": [
-      "json-summary",
-      "text",
-      "lcov"
-    ],
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "./src/**"
-    ]
-  },
   "dependencies": {
     "@actions/core": "^3.0.0"
   },
@@ -92,6 +64,7 @@
     "prettier": "^3.8.1",
     "prettier-eslint": "^16.4.2",
     "ts-jest": "^29.4.6",
+    "ts-jest-resolver": "^2.0.1",
     "typescript": "^5.9.3",
     "yaml-lint": "^1.7.0"
   }
