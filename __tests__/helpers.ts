@@ -1,19 +1,21 @@
-import * as core from '@actions/core'
+import type { jest } from '@jest/globals'
+import type * as core from '@actions/core'
+import * as coreMock from '../__fixtures__/core.js'
 
 export interface MockSpies {
-  errorMock: jest.SpiedFunction<typeof core.error>
-  getInputMock: jest.SpiedFunction<typeof core.getInput>
-  setFailedMock: jest.SpiedFunction<typeof core.setFailed>
-  setOutputMock: jest.SpiedFunction<typeof core.setOutput>
-  exportVariableMock: jest.SpiedFunction<typeof core.exportVariable>
+  errorMock: jest.Mock<typeof core.error>
+  getInputMock: jest.Mock<typeof core.getInput>
+  setFailedMock: jest.Mock<typeof core.setFailed>
+  setOutputMock: jest.Mock<typeof core.setOutput>
+  exportVariableMock: jest.Mock<typeof core.exportVariable>
 }
 
 export function setupMocks(): MockSpies {
   return {
-    errorMock: jest.spyOn(core, 'error').mockImplementation(),
-    getInputMock: jest.spyOn(core, 'getInput').mockImplementation(),
-    setFailedMock: jest.spyOn(core, 'setFailed').mockImplementation(),
-    setOutputMock: jest.spyOn(core, 'setOutput').mockImplementation(),
-    exportVariableMock: jest.spyOn(core, 'exportVariable').mockImplementation()
+    errorMock: coreMock.error,
+    getInputMock: coreMock.getInput,
+    setFailedMock: coreMock.setFailed,
+    setOutputMock: coreMock.setOutput,
+    exportVariableMock: coreMock.exportVariable
   }
 }
